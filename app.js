@@ -43,7 +43,12 @@ app.get('/comments', async (req, res) => {
         comments.push(doc.data())
     });
 
-    res.send(comments)
+    if (querySnapshot) {
+        res.send(comments)
+    } else {
+        res.send("No comments found")
+    }
+
 })
 
 app.post('/comments', async (req, res) => {
