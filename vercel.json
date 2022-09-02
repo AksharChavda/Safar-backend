@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "builds": [
+        {
+            "src": "app.js"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "app.js"
+        }
+    ]
+}
