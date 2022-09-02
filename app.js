@@ -3,10 +3,20 @@ import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
 import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
+import cors from "cors";
+
 
 dotenv.config();
 const app = express()
 const port = process.env.PORT || 3000
+
+app.use(
+    cors({
+        credentials: true,
+        origin: true
+    })
+);
+app.options('*', cors());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -57,5 +67,3 @@ app.post('/comments', async (req, res) => {
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
-
-module.exports = app;
