@@ -34,6 +34,13 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 const db = getFirestore(firebaseApp);
 
+app.get('/', (req, res) => {
+    res.json({
+        "response": "Hello There",
+        "response2": "This is a nice response"
+    })
+})
+
 app.get('/comments', async (req, res) => {
 
     const querySnapshot = await getDocs(collection(db, "comments"));
