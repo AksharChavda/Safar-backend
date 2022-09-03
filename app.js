@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, serverTimestamp, Timestamp } from "firebase/firestore";
 import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
@@ -34,20 +34,18 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 const db = getFirestore(firebaseApp);
 
-app.get('/', (req, res) => {
-    res.json({
-        "response": "Hello There",
-        "response2": "This is a nice response"
-    })
-})
-
 app.get('/comments', async (req, res) => {
 
     const querySnapshot = await getDocs(collection(db, "comments"));
     let comments = []
 
     querySnapshot.forEach((doc) => {
-        comments.push(doc.data())
+        let comment = doc.data()
+        let ts = new Timestamp(comment.createdAt.seconds, comment.createdAt.nanoseconds).toDate()
+        let date = ts.toLocaleString("en-US", {timeZone: 'Asia/Kolkata'});
+        comment.createdAt = date;
+        console.log(comment);
+        comments.push(comment)
     });
 
     if (querySnapshot) {
@@ -67,7 +65,8 @@ app.post('/comments', async (req, res) => {
     try {
         const docRef = await addDoc(collection(db, "comments"), {
           name: data.name,
-          text: data.text
+          text: data.text,
+          createdAt: serverTimestamp()
         });
         console.log("Document written with ID: ", docRef.id);
     } catch (e) {
