@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, serverTimestamp, Timestamp } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, Timestamp } from "firebase/firestore";
 import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
@@ -36,7 +36,10 @@ const db = getFirestore(firebaseApp);
 
 app.get('/comments', async (req, res) => {
 
-    const querySnapshot = await getDocs(collection(db, "comments"));
+    const commentsRef = collection(db, "comments");
+    const q = query(commentsRef, orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
+
     let comments = []
 
     querySnapshot.forEach((doc) => {
